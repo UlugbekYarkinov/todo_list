@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:todo_list/modals/tasks.dart';
+
+import '../modals/task.dart';
 
 class AddTaskScreen extends StatelessWidget {
-  const AddTaskScreen({Key? key}) : super(key: key);
+  AddTaskScreen({Key? key}) : super(key: key);
+
+  late String newTask;
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +25,7 @@ class AddTaskScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Text(
+              const Text(
                 'Add Task',
                 textAlign: TextAlign.center,
                 style: TextStyle(
@@ -29,11 +35,19 @@ class AddTaskScreen extends StatelessWidget {
               ),
               TextField(
                 autofocus: true,
+                onChanged: (value) {
+                  newTask = value;
+                },
               ),
               MaterialButton(
                 color: Colors.lightBlueAccent,
                 textColor: Colors.white,
-                onPressed: () {},
+                onPressed: () {
+                  if(newTask.isNotEmpty) {
+                    Provider.of<Tasks>(context, listen: false).addTask(newTask);
+                  }
+                  Navigator.pop(context);
+                },
                 child: const Text('Add'),
               )
             ],

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_list/modals/tasks.dart';
 
+import '../modals/task.dart';
+
 class TasksList extends StatelessWidget {
   const TasksList({super.key});
 
@@ -11,13 +13,40 @@ class TasksList extends StatelessWidget {
       builder: (context, tasks, child) {
         return ListView.builder(
           itemBuilder: (context, index) {
+            Task task = tasks.tasks[index];
             return TaskTile(
-              isChecked: tasks.tasks[index].isDone,
-              taskTitle: tasks.tasks[index].name,
+              isChecked: task.isDone,
+              taskTitle: task.name,
               checkboxCallback: (checkboxState) {
-                // setState(() {
-                //   // Provider.of<Tasks>(context).tasks[index].toggleDone();
-                // });
+                tasks.updateTask(task);
+              },
+              deleteTask: () {
+                if (task.isDone) {
+                  tasks.deleteTask(task);
+                } else {
+                  showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      title: const Text('Are you sure?'),
+                      content: const Text('This task is not done yet...'),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: const Text('NO'),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            tasks.deleteTask(task);
+                            Navigator.pop(context);
+                          },
+                          child: const Text('YES'),
+                        ),
+                      ],
+                    ),
+                  );
+                }
               },
             );
           },
@@ -34,15 +63,18 @@ class TaskTile extends StatelessWidget {
     required this.isChecked,
     required this.taskTitle,
     required this.checkboxCallback,
+    required this.deleteTask,
   });
 
   final bool isChecked;
   final String taskTitle;
   final Function(bool?) checkboxCallback;
+  final void Function()? deleteTask;
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
+      onLongPress: deleteTask,
       title: Text(
         taskTitle,
         style: TextStyle(
