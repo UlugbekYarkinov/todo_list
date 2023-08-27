@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:todo_list/components/tasks_list.dart';
+import 'package:todo_list/modals/tasks.dart';
 import 'package:todo_list/screens/add_task_screen.dart';
 
 class TasksScreen extends StatelessWidget {
@@ -18,19 +20,19 @@ class TasksScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                CircleAvatar(
+                const CircleAvatar(
+                  backgroundColor: Colors.white,
+                  radius: 30.0,
                   child: Icon(
                     Icons.list,
                     size: 30.0,
                     color: Colors.lightBlueAccent,
                   ),
-                  backgroundColor: Colors.white,
-                  radius: 30.0,
                 ),
                 const SizedBox(
                   height: 10.0,
                 ),
-                Text(
+                const Text(
                   'ToDo It!',
                   style: TextStyle(
                     color: Colors.white,
@@ -39,8 +41,8 @@ class TasksScreen extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  '12 tasks',
-                  style: TextStyle(
+                  '${Provider.of<Tasks>(context).taskCount} tasks',
+                  style: const TextStyle(
                     color: Colors.white,
                     fontSize: 18.0,
                   ),
@@ -57,7 +59,7 @@ class TasksScreen extends StatelessWidget {
                     topRight: Radius.circular(20.0),
                   )),
               padding: const EdgeInsets.symmetric(horizontal: 20.0),
-              child: TasksList(),
+              child: const TasksList(),
             ),
           )
         ],
@@ -69,7 +71,7 @@ class TasksScreen extends StatelessWidget {
             builder: (context) => SingleChildScrollView(
               child: Container(
                 padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-                child: AddTaskScreen(),
+                child: const AddTaskScreen(),
               ),
             ),
           );
